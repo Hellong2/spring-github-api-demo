@@ -1,4 +1,4 @@
-package pl.domdom.spring_github_api.dto;
+package pl.domdom.gapi.dto;
 
 import lombok.Data;
 

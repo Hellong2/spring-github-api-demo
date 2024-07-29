@@ -1,4 +1,4 @@
-package pl.domdom.spring_github_api.rest;
+package pl.domdom.gapi.rest;
 
 
 import org.springframework.http.HttpStatus;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApiControllerAdvice {
     @ExceptionHandler
-    public ResponseEntity<GithubUserErrorResponse> handleException(GithubUserNotFoundException ex) {
-        GithubUserErrorResponse error = new GithubUserErrorResponse();
+    public ResponseEntity<UserErrorResponse> handleException(UserNotFoundException ex) {
+        UserErrorResponse error = new UserErrorResponse();
         error.setStatus(HttpStatus.NOT_FOUND.value());
         error.setMessage(ex.getMessage());
 

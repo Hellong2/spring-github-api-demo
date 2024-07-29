@@ -1,4 +1,4 @@
-package pl.domdom.spring_github_api.webService;
+package pl.domdom.gapi.web.service;
 
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,16 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import pl.domdom.spring_github_api.dto.GHReposDto;
+import pl.domdom.gapi.dto.GHReposDto;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
-public class GithubWebService {
+public class GithubWebServiceImpl implements GithubWebService {
 
     private final GitHub githubConnector;
 
@@ -24,12 +23,14 @@ public class GithubWebService {
 
 
     @Autowired
-    public GithubWebService(@Value("${github.api.app.id}") final long githubAppId, JwtConfig jwtConfig, @Value("${github.api.app.installationId:-1}") long installationId) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public GithubWebServiceImpl(@Value("${github.api.app.id}") final long githubAppId, JwtConfig jwtConfig, @Value("${github.api.app.installationId:-1}") long installationId) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtConfig.getJwtToken(String.valueOf(githubAppId))).build();
-        if (installationId == -1 && gitHubApp.getApp().listInstallations().iterator().hasNext()) {
+        if (installationId == -1) {
             installationId = gitHubApp.getApp().listInstallations().iterator().next().getId();
         } else {
-            throw new RuntimeException("Invalid installation ID");
+            if (!gitHubApp.getApp().listInstallations().iterator().hasNext()) {
+                throw new InstallationIdNotFoundException("Invalid installation ID");
+            }
         }
         GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationById(installationId); // Installation Id
         GHAppInstallationToken appInstallationToken = appInstallation.createToken().create();
@@ -39,25 +40,8 @@ public class GithubWebService {
 
     }
 
-    private static GHReposDto convertToDto(Map.Entry<String, GHRepository> repo) {
-        GHReposDto reposDto = new GHReposDto();
-        reposDto.setRepoName(repo.getKey());
-        reposDto.setRepoOwner(repo.getValue().getOwnerName());
-        reposDto.setReposDetails(new ArrayList<>());
-        try {
-            for (Map.Entry<String, GHBranch> branch : repo.getValue().getBranches().entrySet()) {
-                GHReposDto.GHReposDetails details = new GHReposDto.GHReposDetails();
-                details.setBranchName(branch.getKey());
-                details.setLastCommitSha(branch.getValue().getSHA1());
-                reposDto.getReposDetails().add(details);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("");
-        }
-        return reposDto;
-    }
-
     // there is sometimes a problem with establishing connection, which is why we are trying again.
+    @Override
     @Retryable(
             backoff = @Backoff(delay = 2000)
     )

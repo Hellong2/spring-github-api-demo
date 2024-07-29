@@ -1,4 +1,4 @@
-package pl.domdom.spring_github_api.rest;
+package pl.domdom.gapi.rest;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class GithubUserErrorResponse {
+public class UserErrorResponse {
     private int status;
     private String message;
 }

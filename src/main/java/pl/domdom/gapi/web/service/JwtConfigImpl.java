@@ -1,4 +1,4 @@
-package pl.domdom.spring_github_api.webService;
+package pl.domdom.gapi.web.service;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -18,7 +18,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
 
 @Component
-public class JwtConfig {
+public class JwtConfigImpl implements JwtConfig {
 
     @Value("${github.api.private.key.path}")
     private String privateKeyPath;
@@ -63,6 +63,7 @@ public class JwtConfig {
         return builder.compact();
     }
 
+    @Override
     public String getJwtToken(String githubAppId) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         return createJWT(githubAppId, expirationDate);
     }

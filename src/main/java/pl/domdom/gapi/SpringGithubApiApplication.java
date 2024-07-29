@@ -1,4 +1,4 @@
-package pl.domdom.spring_github_api;
+package pl.domdom.gapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

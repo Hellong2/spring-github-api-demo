@@ -1,4 +1,4 @@
-package pl.domdom.spring_github_api;
+package pl.domdom.gapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
