@@ -18,5 +18,5 @@ This Spring Boot project connects to the GitHub API to retrieve some repositorie
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/spring-github-api.git
-cd spring-github-api
+git clone https://github.com/your-username/spring-github-api-demo.git
+cd spring-github-api-demo
