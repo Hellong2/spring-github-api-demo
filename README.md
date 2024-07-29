@@ -44,3 +44,9 @@ Need to add following properties in application.properties:
 - **github.api.app.installationId** - optional, if you want to be precise which of github app installation you want to use. Defult is -1.
 - **github.api.app.repos.fork.exclude** - optional, if you doesn't want to exclude all branches which are forks, then change to false. Default is true. 
 - **github.api.token.expiration.date** - optional, jwt token expiration date in millis. Default is 600000.
+
+### Api Endpoints
+
+| HTTP Request    | Disclaimer                                                                                                |
+|-----------------|-----------------------------------------------------------------------------------------------------------|
+| GET /api/{user} | search for repositories of a given user (name of repo, owner login, all branches with sha of last commit) |
