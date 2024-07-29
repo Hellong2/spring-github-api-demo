@@ -23,7 +23,7 @@ public class JwtConfig {
     @Value("${github.api.private.key.path}")
     private String privateKeyPath;
 
-    @Value("${github.api.token.expiration.date}")
+    @Value("${github.api.token.expiration.date:600000}")
     private long expirationDate;
 
     private PrivateKey get(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
