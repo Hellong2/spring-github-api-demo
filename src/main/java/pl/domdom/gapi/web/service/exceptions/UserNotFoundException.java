@@ -1,4 +1,4 @@
-package pl.domdom.gapi.rest;
+package pl.domdom.gapi.web.service.exceptions;
 
 
 public class UserNotFoundException extends RuntimeException {

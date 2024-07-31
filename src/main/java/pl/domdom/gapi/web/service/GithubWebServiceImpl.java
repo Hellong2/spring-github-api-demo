@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import pl.domdom.gapi.dto.GHReposDto;
+import pl.domdom.gapi.dto.GHUserReposDto;
+import pl.domdom.gapi.web.service.exceptions.InstallationIdNotFoundException;
+import pl.domdom.gapi.web.service.exceptions.UserNotFoundException;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -45,16 +47,20 @@ public class GithubWebServiceImpl implements GithubWebService {
     @Retryable(
             backoff = @Backoff(delay = 2000)
     )
-    public List<GHReposDto> getUserRepos(String userName) throws IOException {
-        Map<String, GHRepository> userRepos = githubConnector.getUser(userName).getRepositories();
-        if (appReposExcluded) {
-            return filterRepositories(userRepos);
+    public List<GHUserReposDto> getUserRepos(String userName) throws IOException {
+        try {
+            Map<String, GHRepository> userRepos = githubConnector.getUser(userName).getRepositories();
+            if (appReposExcluded) {
+                return filterRepositories(userRepos);
+            }
+            return userRepos.entrySet().stream().map(GithubWebService::convertToDto).toList();
+        } catch (GHFileNotFoundException e) {
+            throw new UserNotFoundException(e.getMessage());
         }
-        return userRepos.entrySet().stream().map(GithubWebService::convertToDto).toList();
     }
 
 
-    private static List<GHReposDto> filterRepositories(Map<String, GHRepository> repositories) {
+    private static List<GHUserReposDto> filterRepositories(Map<String, GHRepository> repositories) {
         return repositories.entrySet()
                 .stream()
                 .filter(entry -> !entry.getValue().isFork())

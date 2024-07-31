@@ -1,4 +1,4 @@
-package pl.domdom.gapi.web.service;
+package pl.domdom.gapi.web.service.exceptions;
 
 public class InstallationIdNotFoundException extends RuntimeException {
     public InstallationIdNotFoundException(String message) {

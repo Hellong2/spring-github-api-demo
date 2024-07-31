@@ -1,4 +1,4 @@
-package pl.domdom.gapi.web.service;
+package pl.domdom.gapi.web.service.exceptions;
 
 public class GetUserBranchesException extends RuntimeException {
     public GetUserBranchesException(String message) {
